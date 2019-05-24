@@ -8,8 +8,36 @@ export class App extends Component {
 
   handleData = data => {
     // console.log(data);
-    this.setState({ csvRaw: data });
-    console.log(this.state.csvRaw[0]);
+    // this.setState({ csvRaw: data });
+    // console.log(this.state.csvRaw[0]);
+
+    // // formating data for geocoding
+    // this.state.csvRaw.map(e => {
+    //   // allocate key-value format
+    //   console.log(
+    //     // `${e.CATEGORY}: ${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
+    //     {
+    //       category: e.CATEGORY,
+    //       address: `${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
+    //     }
+    //   );
+    // });
+
+    // processing csv directly from upload
+    let points = [];
+
+    data.map(e => {
+      let point = {
+        category: e.CATEGORY,
+        address: `${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
+      };
+
+      points.push(point);
+    });
+
+    this.setState({
+      csvData: points
+    });
   };
 
   render() {
