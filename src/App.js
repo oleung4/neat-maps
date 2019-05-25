@@ -1,28 +1,17 @@
 import React, { Component } from "react";
 import CsvParse from "@vtex/react-csv-parse";
 
+import "./App.css";
+
+import Map from "./components/Map";
+
 export class App extends Component {
   state = {
-    csvRaw: null
+    csvData: null
   };
 
   handleData = data => {
-    // console.log(data);
-    // this.setState({ csvRaw: data });
-    // console.log(this.state.csvRaw[0]);
-
-    // // formating data for geocoding
-    // this.state.csvRaw.map(e => {
-    //   // allocate key-value format
-    //   console.log(
-    //     // `${e.CATEGORY}: ${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
-    //     {
-    //       category: e.CATEGORY,
-    //       address: `${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
-    //     }
-    //   );
-    // });
-
+    // console.log(Array.isArray(data));
     // processing csv directly from upload
     let points = [];
 
@@ -77,6 +66,11 @@ export class App extends Component {
             )}
           />
         </div>
+        {/* display map below */}
+        <div className="row justify-content-center">
+          <h1>map goes here</h1>
+        </div>
+        <Map />
       </div>
     );
   }
