@@ -7,13 +7,15 @@ import Map from "./components/Map";
 
 export class App extends Component {
   state = {
-    csvData: null
+    csvData: null,
+    categories: null
   };
 
   handleData = data => {
     // console.log(Array.isArray(data));
     // processing csv directly from upload
     let points = [];
+    let categories = [];
 
     data.map(e => {
       let point = {
@@ -21,11 +23,15 @@ export class App extends Component {
         address: `${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
       };
 
-      return points.push(point);
+      return {
+        points: points.push(point),
+        categories: categories.push(e.CATEGORY)
+      };
     });
 
     this.setState({
-      csvData: points
+      csvData: points,
+      categories
     });
   };
 
@@ -70,7 +76,10 @@ export class App extends Component {
         <div className="row justify-content-center">
           <h1>map goes here</h1>
         </div>
-        <Map addresses={this.state.csvData} />
+        <Map
+          addresses={this.state.csvData}
+          categories={this.state.categories}
+        />
       </div>
     );
   }
