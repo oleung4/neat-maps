@@ -75,6 +75,7 @@ export class Map extends Component {
           // console.log(address.category);
           const { lat, lng } = response.results[0].geometry.location;
           var points = { lat, lng };
+
           // creating the marker for the map
           var mapMarker = new window.google.maps.Marker({
             title: address.category,
@@ -86,6 +87,13 @@ export class Map extends Component {
           });
 
           this.mapMarkers.push(mapMarker);
+
+          // placing fitBounds logic within Geocode function works
+          var bounds = new window.google.maps.LatLngBounds();
+          for (var i = 0; i < this.mapMarkers.length; i++) {
+            bounds.extend(this.mapMarkers[i].getPosition());
+          }
+          map.fitBounds(bounds);
         },
         error => {
           console.error(error);
@@ -93,8 +101,7 @@ export class Map extends Component {
       );
       return this.mapMarkers;
     });
-    // console.log(this.mapMarkers);
-    // console.log(categories);
+    console.log(this.mapMarkers);
   };
 
   render() {
