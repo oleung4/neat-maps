@@ -3,15 +3,55 @@ import Geocode from "react-geocode";
 
 var apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
+Geocode.setApiKey(apiKey);
+Geocode.enableDebug();
+
 export class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapPoints: []
+      mapPoints: ["testing", "testing1"]
     };
   }
-  componentDidMount() {
-    this.renderMap();
+
+  // componentDidMount() {
+  //   this.renderMap();
+  // }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.addresses !== prevProps.addresses) {
+      console.log("component is updated: ", this.props.addresses);
+      // timing issue - on initial render, state is empty until user uploads csv
+
+      const { addresses } = this.props; // destructuring for readability
+      let mapPoints = [];
+
+      addresses.map(address => {
+        Geocode.fromAddress(address.address).then(
+          response => {
+            const { lat, lng } = response.results[0].geometry.location;
+            // console.log(lat, lng);
+            var points = { lat, lng };
+
+            mapPoints.push({
+              address,
+              points
+            });
+          },
+          error => {
+            console.error(error);
+          }
+        );
+        return mapPoints;
+      });
+      this.setState(
+        {
+          mapPoints
+        },
+        // callback to fire after state set
+        this.renderMap
+      );
+    }
   }
 
   renderMap = () => {

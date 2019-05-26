@@ -21,7 +21,7 @@ export class App extends Component {
         address: `${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
       };
 
-      points.push(point);
+      return points.push(point);
     });
 
     this.setState({
@@ -70,7 +70,7 @@ export class App extends Component {
         <div className="row justify-content-center">
           <h1>map goes here</h1>
         </div>
-        <Map />
+        <Map addresses={this.state.csvData} />
       </div>
     );
   }
