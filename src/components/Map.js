@@ -9,48 +9,15 @@ Geocode.enableDebug();
 export class Map extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      mapPoints: ["testing", "testing1"]
-    };
+    this.mapMarkers = [];
   }
-
-  // componentDidMount() {
-  //   this.renderMap();
-  // }
 
   componentDidUpdate(prevProps) {
     if (this.props.addresses !== prevProps.addresses) {
       console.log("component is updated: ", this.props.addresses);
       // timing issue - on initial render, state is empty until user uploads csv
 
-      const { addresses } = this.props; // destructuring for readability
-      let mapPoints = [];
-
-      addresses.map(address => {
-        Geocode.fromAddress(address.address).then(
-          response => {
-            const { lat, lng } = response.results[0].geometry.location;
-            // console.log(lat, lng);
-            var points = { lat, lng };
-
-            mapPoints.push({
-              address,
-              points
-            });
-          },
-          error => {
-            console.error(error);
-          }
-        );
-        return mapPoints;
-      });
-      this.setState(
-        {
-          mapPoints
-        },
-        // callback to fire after state set
-        this.renderMap
-      );
+      this.renderMap();
     }
   }
 
@@ -67,6 +34,30 @@ export class Map extends Component {
       center: { lat: -34.397, lng: 150.644 },
       zoom: 8
     });
+
+    const { addresses } = this.props; // destructuring for readability
+
+    addresses.map(address => {
+      Geocode.fromAddress(address.address).then(
+        response => {
+          const { lat, lng } = response.results[0].geometry.location;
+          var points = { lat, lng };
+          // console.log(points);
+          var mapMarker = new window.google.maps.Marker({
+            title: address.category,
+            position: points,
+            map
+          });
+
+          this.mapMarkers.push(mapMarker);
+        },
+        error => {
+          console.error(error);
+        }
+      );
+      return this.mapMarkers;
+    });
+    console.log(this.mapMarkers);
   };
 
   render() {
