@@ -5,17 +5,26 @@ import "./App.css";
 
 import Map from "./components/Map";
 import Login from "./components/Login";
+import Navbar from "./components/common/Navbar";
+import Footer from "./components/common/Footer";
 
 export class App extends Component {
   state = {
     csvData: null,
     categories: null,
-    isAuthenticated: false
+    isAuthenticated: false,
+    user: {}
   };
 
-  loginUser = () => {
+  loginUser = data => {
+    const user = {
+      email: data.data.email,
+      id: data.data.id
+    };
+
     this.setState({
-      isAuthenticated: true
+      isAuthenticated: true,
+      user
     });
   };
 
@@ -44,55 +53,71 @@ export class App extends Component {
   };
 
   render() {
-    if (this.state.isAuthenticated) {
+    if (
+      this.state.isAuthenticated &&
+      Object.keys(this.state.user).length !== 0
+    ) {
       const keys = ["CATEGORY", "STATE", "CITY", "ZIPCODE", "ADDRESS"];
 
       return (
-        <div className="container">
-          <div className="row justify-content-center">
-            <h1>upload csv here</h1>
-          </div>
-          <div className="row justify-content-center">
-            <CsvParse
-              keys={keys}
-              onDataUploaded={this.handleData}
-              onError={this.handleError}
-              render={onChange => (
-                <div className="input-group mb-3">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Upload</span>
+        <div id="page-container">
+          <Navbar />
+          <div className="container" id="content-wrap">
+            <div className="row justify-content-center">
+              <h2>Select your CSV file</h2>
+            </div>
+            <div className="row justify-content-center">
+              <CsvParse
+                keys={keys}
+                onDataUploaded={this.handleData}
+                onError={this.handleError}
+                render={onChange => (
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text">Upload</span>
+                    </div>
+                    <div className="custom-file">
+                      <input
+                        type="file"
+                        accept=".csv"
+                        className="custom-file-input"
+                        id="inputGroupFile01"
+                        onChange={onChange}
+                      />
+                      <label
+                        className="custom-file-label"
+                        htmlFor="inputGroupFile01"
+                      >
+                        Choose file
+                      </label>
+                    </div>
                   </div>
-                  <div className="custom-file">
-                    <input
-                      type="file"
-                      accept=".csv"
-                      className="custom-file-input"
-                      id="inputGroupFile01"
-                      onChange={onChange}
-                    />
-                    <label
-                      className="custom-file-label"
-                      htmlFor="inputGroupFile01"
-                    >
-                      Choose file
-                    </label>
-                  </div>
-                </div>
-              )}
+                )}
+              />
+            </div>
+            {/* display map below */}
+            <div className="row justify-content-center">
+              <h5 style={{ marginBottom: "1.5rem" }}>
+                The map will render below
+              </h5>
+            </div>
+            <Map
+              addresses={this.state.csvData}
+              categories={this.state.categories}
             />
           </div>
-          {/* display map below */}
-          <div className="row justify-content-center">
-            <h1>map goes here</h1>
-          </div>
-          <Map
-            addresses={this.state.csvData}
-            categories={this.state.categories}
-          />
+          <Footer />
         </div>
       );
     } else {
-      return <Login loginUser={this.loginUser} />;
+      // login page if no user logged in
+      return (
+        <div id="page-container">
+          <Navbar />
+          <Login loginUser={this.loginUser} />
+          <Footer />
+        </div>
+      );
     }
   }
 }

@@ -28,7 +28,7 @@ export default class Login extends Component {
 
     const config = {
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded" // application/json not working
       }
     };
 
@@ -42,21 +42,19 @@ export default class Login extends Component {
       .then(res => {
         console.log(res);
         // call the action
-        this.props.loginUser();
+        this.props.loginUser(res);
       })
       .catch(err => console.log(err));
   };
 
   render() {
     return (
-      <div className="login">
+      <div id="content-wrap">
         <div className="container">
           <div className="row">
-            <div className="col-md-8 m-auto">
-              <h1 className="display-4 text-center">Log In</h1>
-              <p className="lead text-center">
-                Sign in with testy@testy.com // 123456
-              </p>
+            <div className="col-m-8 m-auto">
+              <h1 className="text-center">Log In</h1>
+              <p className="lead text-center">Use any Neat API test account</p>
               <form onSubmit={this.onSubmit}>
                 <div className="form-group">
                   <input
