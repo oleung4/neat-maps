@@ -78,7 +78,7 @@ export default class Map extends Component {
 
   render() {
     return (
-      <div className="row">
+      <div className="row" style={{ marginBottom: "2rem" }}>
         <div id="map" />
       </div>
     );
