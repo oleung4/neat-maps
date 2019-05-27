@@ -13,6 +13,12 @@ export class App extends Component {
     isAuthenticated: false
   };
 
+  loginUser = () => {
+    this.setState({
+      isAuthenticated: true
+    });
+  };
+
   handleData = data => {
     // console.log(Array.isArray(data));
     // processing csv directly from upload
@@ -86,7 +92,7 @@ export class App extends Component {
         </div>
       );
     } else {
-      return <Login />;
+      return <Login loginUser={this.loginUser} />;
     }
   }
 }

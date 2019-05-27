@@ -41,10 +41,10 @@ export default class Login extends Component {
       )
       .then(res => {
         console.log(res);
+        // call the action
+        this.props.loginUser();
       })
       .catch(err => console.log(err));
-    // call the action
-    // this.props.loginUser(userData);
   };
 
   render() {
