@@ -4,11 +4,13 @@ import CsvParse from "@vtex/react-csv-parse";
 import "./App.css";
 
 import Map from "./components/Map";
+import Login from "./components/Login";
 
 export class App extends Component {
   state = {
     csvData: null,
-    categories: null
+    categories: null,
+    isAuthenticated: false
   };
 
   handleData = data => {
@@ -36,52 +38,56 @@ export class App extends Component {
   };
 
   render() {
-    const keys = ["CATEGORY", "STATE", "CITY", "ZIPCODE", "ADDRESS"];
+    if (this.state.isAuthenticated) {
+      const keys = ["CATEGORY", "STATE", "CITY", "ZIPCODE", "ADDRESS"];
 
-    return (
-      <div className="container">
-        <div className="row justify-content-center">
-          <h1>upload csv here</h1>
-        </div>
-        <div className="row justify-content-center">
-          <CsvParse
-            keys={keys}
-            onDataUploaded={this.handleData}
-            onError={this.handleError}
-            render={onChange => (
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">Upload</span>
+      return (
+        <div className="container">
+          <div className="row justify-content-center">
+            <h1>upload csv here</h1>
+          </div>
+          <div className="row justify-content-center">
+            <CsvParse
+              keys={keys}
+              onDataUploaded={this.handleData}
+              onError={this.handleError}
+              render={onChange => (
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">Upload</span>
+                  </div>
+                  <div className="custom-file">
+                    <input
+                      type="file"
+                      accept=".csv"
+                      className="custom-file-input"
+                      id="inputGroupFile01"
+                      onChange={onChange}
+                    />
+                    <label
+                      className="custom-file-label"
+                      htmlFor="inputGroupFile01"
+                    >
+                      Choose file
+                    </label>
+                  </div>
                 </div>
-                <div className="custom-file">
-                  <input
-                    type="file"
-                    accept=".csv"
-                    className="custom-file-input"
-                    id="inputGroupFile01"
-                    onChange={onChange}
-                  />
-                  <label
-                    className="custom-file-label"
-                    htmlFor="inputGroupFile01"
-                  >
-                    Choose file
-                  </label>
-                </div>
-              </div>
-            )}
+              )}
+            />
+          </div>
+          {/* display map below */}
+          <div className="row justify-content-center">
+            <h1>map goes here</h1>
+          </div>
+          <Map
+            addresses={this.state.csvData}
+            categories={this.state.categories}
           />
         </div>
-        {/* display map below */}
-        <div className="row justify-content-center">
-          <h1>map goes here</h1>
-        </div>
-        <Map
-          addresses={this.state.csvData}
-          categories={this.state.categories}
-        />
-      </div>
-    );
+      );
+    } else {
+      return <Login />;
+    }
   }
 }
 

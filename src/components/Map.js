@@ -6,7 +6,7 @@ var apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 Geocode.setApiKey(apiKey);
 Geocode.enableDebug(false);
 
-export class Map extends Component {
+export default class Map extends Component {
   constructor(props) {
     super(props);
     this.mapMarkers = [];
@@ -30,8 +30,9 @@ export class Map extends Component {
   initMap = () => {
     // need to add 'window.' to fix undefined error
     var map = new window.google.maps.Map(document.getElementById("map"), {
-      center: { lat: -34.397, lng: 150.644 },
-      zoom: 8
+      // default center around US
+      center: { lat: 37.131158, lng: -107.9834686 },
+      zoom: 5
     });
 
     const { addresses, categories } = this.props; // destructuring for readability
@@ -39,35 +40,6 @@ export class Map extends Component {
     // categories passed through as props, then create a new array with unique values
     var uniqueCategories = [...new Set(categories)];
     console.log(uniqueCategories);
-    // switch statement for color coding markers
-    var iconBase = "http://labs.google.com/ridefinder/images/";
-    const icons = category => {
-      switch (category) {
-        case uniqueCategories[0]:
-          return `${iconBase}mm_20_red.png`;
-        case uniqueCategories[1]:
-          return `${iconBase}mm_20_green.png`;
-        case uniqueCategories[2]:
-          return `${iconBase}mm_20_orange.png`;
-        case uniqueCategories[3]:
-          return `${iconBase}mm_20_purple.png`;
-        case uniqueCategories[4]:
-          return `${iconBase}mm_20_white.png`;
-        case uniqueCategories[5]:
-          return `${iconBase}mm_20_yellow.png`;
-        case uniqueCategories[6]:
-          return `${iconBase}mm_20_black.png`;
-        case uniqueCategories[7]:
-          return `${iconBase}mm_20_blue.png`;
-        case uniqueCategories[8]:
-          return `${iconBase}mm_20_brown.png`;
-        case uniqueCategories[9]:
-          return `${iconBase}mm_20_gray.png`;
-        default:
-          console.log("Something went wrong");
-          break;
-      }
-    };
 
     addresses.map(address => {
       Geocode.fromAddress(address.address).then(
@@ -81,7 +53,7 @@ export class Map extends Component {
             title: address.category,
             position: points,
             icon: {
-              url: icons(address.category)
+              url: icons(address.category, uniqueCategories)
             },
             map
           });
@@ -122,4 +94,33 @@ function loadScript(url) {
   index.parentNode.insertBefore(script, index);
 }
 
-export default Map;
+// switch statement for colour coding markers - currently hard coded 9 + 1 colours
+function icons(category, uniqueCategories) {
+  var iconBase = "http://labs.google.com/ridefinder/images/";
+  switch (category) {
+    case uniqueCategories[0]:
+      return `${iconBase}mm_20_red.png`;
+    case uniqueCategories[1]:
+      return `${iconBase}mm_20_green.png`;
+    case uniqueCategories[2]:
+      return `${iconBase}mm_20_orange.png`;
+    case uniqueCategories[3]:
+      return `${iconBase}mm_20_purple.png`;
+    case uniqueCategories[4]:
+      return `${iconBase}mm_20_white.png`;
+    case uniqueCategories[5]:
+      return `${iconBase}mm_20_yellow.png`;
+    case uniqueCategories[6]:
+      return `${iconBase}mm_20_black.png`;
+    case uniqueCategories[7]:
+      return `${iconBase}mm_20_blue.png`;
+    case uniqueCategories[8]:
+      return `${iconBase}mm_20_brown.png`;
+    // case uniqueCategories[9]:
+    //   return `${iconBase}mm_20_gray.png`;
+    default:
+      return `${iconBase}mm_20_gray.png`;
+    // console.log("Something went wrong");
+    // break;
+  }
+}
