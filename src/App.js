@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CsvParse from "@vtex/react-csv-parse";
+import CsvParse from "./components/utils/CsvParse";
 
 import "./App.css";
 
@@ -54,7 +54,7 @@ export class App extends Component {
 
   render() {
     if (
-      this.state.isAuthenticated &&
+      this.state.isAuthenticated ||
       Object.keys(this.state.user).length !== 0
     ) {
       const keys = ["CATEGORY", "STATE", "CITY", "ZIPCODE", "ADDRESS"];
