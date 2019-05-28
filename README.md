@@ -14,7 +14,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 1. Contains login "protection" against anonymous users using registered Neat API users
 2. User can upload CSV file with five columns of up to 20 rows of information (no hard limit set on number of rows). Data works for US addresses
-   - Current limitation is that CSV **must be formated** in column order of `[CATEGORY, ADDRESS, CITY, STATE, ZIPCODE]`. **Ability to specify column headers not yet implemented**
+   - Current limitation is that CSV **must be formated** in column order of `[CATEGORY, STATE, CITY, ZIPCODE, ADDRESS]`. **Ability to specify column headers not yet implemented**
 3. Once the CSV file has been uploaded, a map will be rendered showing all data points, colour coded by each unique Category. Users can click on each point to reveal an info window with basic information
    - Limitation of colour palette limits number of unique coloured categories to 10. Additional marker colours/shapes from different sources can be added if need be
 4. User can rerun CSV upload and render new map, as plot points are reset on each new render
