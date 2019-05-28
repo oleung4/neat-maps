@@ -15,6 +15,7 @@ export default class Map extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.addresses !== prevProps.addresses) {
       console.log("component is updated: ", this.props);
+      this.mapMarkers = []; // reset on each render
       // timing issue - on initial render, state is empty until user uploads csv
       this.renderMap();
     }
@@ -35,6 +36,9 @@ export default class Map extends Component {
       zoom: 5
     });
 
+    // create an infowindow
+    var infoWindow = new window.google.maps.InfoWindow();
+
     const { addresses, categories } = this.props; // destructuring for readability
 
     // categories passed through as props, then create a new array with unique values
@@ -42,6 +46,13 @@ export default class Map extends Component {
     console.log(uniqueCategories);
 
     addresses.map(address => {
+      // infoWindow styling
+      var contentString = `
+      <h6 style="margin-bottom: 0.2em">${address.category}</h6> 
+      <p style="font-weight: 500; margin-bottom: 0.2em">${address.address}</p>
+      `;
+
+      // convert address to lnglat
       Geocode.fromAddress(address.address).then(
         response => {
           // console.log(address.category);
@@ -56,6 +67,14 @@ export default class Map extends Component {
               url: icons(address.category, uniqueCategories)
             },
             map
+          });
+
+          // opening markers on click
+          mapMarker.addListener("click", () => {
+            // change the content - only one open at a time
+            infoWindow.setContent(contentString);
+            // open an info window
+            infoWindow.open(map, mapMarker);
           });
 
           this.mapMarkers.push(mapMarker);
