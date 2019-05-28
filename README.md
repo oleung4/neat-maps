@@ -15,7 +15,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 1. Contains login "protection" against anonymous users using registered Neat API users
 2. User can upload CSV file with five columns of up to 20 rows of information (no hard limit set on number of rows). Data works for US addresses
    - Current limitation is that CSV **must be formated** in column order of `[CATEGORY, STATE, CITY, ZIPCODE, ADDRESS]`. **Ability to specify column headers not yet implemented**
-3. Once the CSV file has been uploaded, a map will be rendered showing all data points, colour coded by each unique Category. Users can click on each point to reveal an info window with basic information
+3. Once the CSV file has been uploaded, a map will be rendered showing all data points (with the help of Geocoding API), colour coded by each unique Category. Users can click on each point to reveal an info window with basic information
    - Limitation of colour palette limits number of unique coloured categories to 10. Additional marker colours/shapes from different sources can be added if need be
 4. User can rerun CSV upload and render new map, as plot points are reset on each new render
    - **Storing recent upload feature not yet implemented.** Trying to figure out how to implement without using a backend server. Maybe by storing uploaded data into separate properties, then rendering map based on selected state property
@@ -43,7 +43,9 @@ To install all app dependencies.
 ### `.env`
 
 Create a `.env` file in the root directory.<br>
-Add the following `REACT_APP_GOOGLE_MAPS_KEY=YOUR_API_KEY_HERE` with your own Google Maps API key.
+Add the following `REACT_APP_GOOGLE_MAPS_KEY=YOUR_API_KEY_HERE` with your own Google Maps API key.<br>
+
+Ensure that `Maps Javascript API` and `Geocoding API` have been activated in your Google Cloud Platform Console.
 
 ### `yarn start`
 
