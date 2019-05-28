@@ -22,6 +22,11 @@ The App also has basic protection against anonymous users using Neat API.
 
 - **Tests have not yet been written**
 - Tweaked code of [@vtex/react-csv-parser](https://github.com/oleung4/react-csv-parse) was not working via `yarn install github:repo`, so `CsvParse` code was imported into `./utils` folder
+- With the current re-rendering logic of the Map component, I receive the following warning:
+
+  > You have included the Google Maps JavaScript API multiple times on this page. This may cause unexpected errors.
+
+  For the time being, it does not appear to break my code/cause any major spikes in API calls. Will look into issue later. Maybe something to do with how I call `renderMap()` and `initMap()`. Occurs when loading new map points
 
 ---
 
@@ -45,3 +50,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
+
+### `login`
+
+User should be able to login using any registered Neat API account.<br>
+Feel free to use testy@testy.com // 123456 if you do not have access to credentials.
+
+### `demo csv`
+
+Use the file [north.csv](./north.csv) to test the map function.<br>
+Given current upload limitation, this file should also be used as a formatting reference for own files.
