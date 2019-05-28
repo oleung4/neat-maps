@@ -4,6 +4,8 @@ App is designed to allow users to upload CSV files with 5 columns containing US 
 
 The App also has basic protection against anonymous users using Neat API.
 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
 ---
 
 ## Current Functionality
