@@ -12,6 +12,22 @@
   padding-bottom: 4.5rem; /* Footer height */
 }
 
+.csv-reader-input {
+  text-align: center;
+}
+
+.csv-reader-input label {
+  margin-bottom: 0;
+}
+
+.csv-input {
+  padding: 10px;
+  display: block;
+  margin: 15px auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 footer {
   position: absolute;
   bottom: 0;
