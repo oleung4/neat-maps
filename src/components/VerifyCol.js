@@ -8,7 +8,8 @@ export default class VerifyCol extends Component {
       column_two: "",
       column_three: "",
       column_four: "",
-      column_five: ""
+      column_five: "",
+      headers: null
     };
   }
 
@@ -34,9 +35,9 @@ export default class VerifyCol extends Component {
   };
 
   render() {
-    const { csvData, headers } = this.props.state;
+    const { csvRaw, headers } = this.props.state;
     // need to add logic for hiding after headers are set
-    if ((csvData.length > 0 && headers > 0) || csvData.length === 0) {
+    if ((csvRaw.length > 0 && headers > 0) || csvRaw.length === 0) {
       return (
         <div>
           <p>Upload your CSV file first</p>

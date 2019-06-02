@@ -10,22 +10,36 @@ import VerifyCol from "./components/VerifyCol";
 
 export class App extends Component {
   state = {
-    csvData: [],
+    csvRaw: [],
     headers: null,
+    csvData: [],
     categories: []
   };
 
   // first get headers from user input
   setHeaders = order => {
+    let csvData = [];
+    // then build the json for each row
+    this.state.csvRaw.map(row => {
+      var jsonRow = {};
+      row.forEach((currentValue, index) => {
+        jsonRow[order[index]] = currentValue;
+      });
+      return {
+        csvData: csvData.push(jsonRow)
+      };
+    });
+
     this.setState({
-      headers: order
+      headers: order,
+      csvData
     });
   };
 
   handleForce = data => {
     console.log(data);
     this.setState({
-      csvData: data
+      csvRaw: data
     });
   };
 
