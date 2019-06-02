@@ -3,7 +3,7 @@ import CSVReader from "react-csv-reader";
 
 import "./App.css";
 
-import Map from "./components/Map";
+import Map from "./components/Map-test";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import VerifyCol from "./components/VerifyCol";
@@ -12,8 +12,7 @@ export class App extends Component {
   state = {
     csvRaw: [],
     headers: null,
-    csvData: [],
-    categories: []
+    csvData: []
   };
 
   // first get headers from user input
@@ -71,15 +70,12 @@ export class App extends Component {
           </div>
           <div className="row justify-content-center" />
           {/* display map below */}
-          {/* <div className="row justify-content-center">
-              <h5 style={{ marginBottom: "1.5rem" }}>
-                The map will render below
-              </h5>
-            </div>
-            <Map
-              addresses={this.state.csvData}
-              categories={this.state.categories}
-            /> */}
+          <div className="row justify-content-center">
+            <h5 style={{ marginBottom: "1.5rem" }}>
+              The map will render below
+            </h5>
+          </div>
+          <Map addresses={this.state.csvData} categories={this.state.headers} />
         </div>
         <Footer />
       </div>
