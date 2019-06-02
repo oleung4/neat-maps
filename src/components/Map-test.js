@@ -26,23 +26,27 @@ export default class Map extends Component {
   }
 
   formatAddresses = () => {
-    let points = [];
+    const { addresses } = this.props;
 
-    this.props.addresses.map(e => {
+    let points = [];
+    let categories = [];
+
+    addresses.map(e => {
       let point = {
-        category: e.category,
+        category: e.CATEGORY,
         address: `${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
       };
 
       return {
-        points: points.push(point)
+        points: points.push(point),
+        categories: categories.push(e.CATEGORY)
       };
     });
 
     this.setState(
       {
         csvData: points,
-        categories: this.props.categories
+        categories
       },
       this.renderMap()
     );
@@ -72,26 +76,26 @@ export default class Map extends Component {
     var uniqueCategories = [...new Set(categories)];
     console.log(uniqueCategories);
 
-    csvData.map(address => {
+    csvData.map(point => {
       // infoWindow styling
       var contentString = `
-      <h6 style="margin-bottom: 0.2em">${address.category}</h6> 
-      <p style="font-weight: 500; margin-bottom: 0.2em">${address.address}</p>
+      <h6 style="margin-bottom: 0.2em">${point.category}</h6> 
+      <p style="font-weight: 500; margin-bottom: 0.2em">${point.address}</p>
       `;
 
       // convert address to lnglat
-      Geocode.fromAddress(address.address).then(
+      Geocode.fromAddress(point.address).then(
         response => {
-          // console.log(address.category);
+          // console.log(point.category);
           const { lat, lng } = response.results[0].geometry.location;
           var points = { lat, lng };
 
           // creating the marker for the map
           var mapMarker = new window.google.maps.Marker({
-            title: address.category,
+            title: point.category,
             position: points,
             icon: {
-              url: icons(address.category, uniqueCategories)
+              url: icons(point.category, uniqueCategories)
             },
             map
           });

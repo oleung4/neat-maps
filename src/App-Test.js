@@ -75,7 +75,7 @@ export class App extends Component {
               The map will render below
             </h5>
           </div>
-          <Map addresses={this.state.csvData} categories={this.state.headers} />
+          <Map addresses={this.state.csvData} />
         </div>
         <Footer />
       </div>
