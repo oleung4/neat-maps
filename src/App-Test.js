@@ -15,6 +15,7 @@ export class App extends Component {
     categories: []
   };
 
+  // first get headers from user input
   setHeaders = order => {
     this.setState({
       headers: order
@@ -52,7 +53,7 @@ export class App extends Component {
             />
           </div>
           <div className="row justify-content-center">
-            <VerifyCol setHeaders={this.setHeaders} />
+            <VerifyCol setHeaders={this.setHeaders} state={this.state} />
           </div>
           <div className="row justify-content-center" />
           {/* display map below */}
