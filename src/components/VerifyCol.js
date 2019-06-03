@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import SelectOption from "./common/SelectOption";
+
 export default class VerifyCol extends Component {
   constructor(props) {
     super(props);
@@ -38,91 +40,60 @@ export default class VerifyCol extends Component {
     const { csvRaw, headers } = this.props.state;
     // need to add logic for hiding after headers are set
     if ((csvRaw.length > 0 && headers > 0) || csvRaw.length === 0) {
-      return (
-        <div>
-          <p>Upload your CSV file first</p>
-        </div>
-      );
+      return <div />;
     } else {
+      const options = ["ADDRESS", "CITY", "STATE", "ZIPCODE", "CATEGORY"];
+
       return (
         <div>
           <p className="mb-1 text-center">Confirm CSV table headers</p>
           <form onSubmit={this.onSubmit}>
-            <select
+            <SelectOption
               onChange={this.onChange}
               name="column_one"
+              title="Column 1"
+              options={options}
               value={this.state.column_one}
-            >
-              <option value="" disabled defaultValue>
-                Column 1
-              </option>
-              <option value="ADDRESS">ADDRESS</option>
-              <option value="CITY">CITY</option>
-              <option value="STATE">STATE</option>
-              <option value="ZIPCODE">ZIPCODE</option>
-              <option value="CATEGORY">CATEGORY</option>
-            </select>
-            <select
+            />
+            <SelectOption
               onChange={this.onChange}
               name="column_two"
+              title="Column 2"
+              options={options}
               value={this.state.column_two}
-            >
-              <option value="" disabled defaultValue>
-                Column 2
-              </option>
-              <option value="ADDRESS">ADDRESS</option>
-              <option value="CITY">CITY</option>
-              <option value="STATE">STATE</option>
-              <option value="ZIPCODE">ZIPCODE</option>
-              <option value="CATEGORY">CATEGORY</option>
-            </select>
-            <select
+            />
+            <SelectOption
               onChange={this.onChange}
               name="column_three"
+              title="Column 3"
+              options={options}
               value={this.state.column_three}
-            >
-              <option value="" disabled defaultValue>
-                Column 3
-              </option>
-              <option value="ADDRESS">ADDRESS</option>
-              <option value="CITY">CITY</option>
-              <option value="STATE">STATE</option>
-              <option value="ZIPCODE">ZIPCODE</option>
-              <option value="CATEGORY">CATEGORY</option>
-            </select>
-            <select
+            />
+            <SelectOption
               onChange={this.onChange}
               name="column_four"
+              title="Column 4"
+              options={options}
               value={this.state.column_four}
-            >
-              <option value="" disabled defaultValue>
-                Column 4
-              </option>
-              <option value="ADDRESS">ADDRESS</option>
-              <option value="CITY">CITY</option>
-              <option value="STATE">STATE</option>
-              <option value="ZIPCODE">ZIPCODE</option>
-              <option value="CATEGORY">CATEGORY</option>
-            </select>
-            <select
+            />
+            <SelectOption
               onChange={this.onChange}
               name="column_five"
+              title="Column 5"
+              options={options}
               value={this.state.column_five}
-            >
-              <option value="" disabled defaultValue>
-                Column 5
-              </option>
-              <option value="ADDRESS">ADDRESS</option>
-              <option value="CITY">CITY</option>
-              <option value="STATE">STATE</option>
-              <option value="ZIPCODE">ZIPCODE</option>
-              <option value="CATEGORY">CATEGORY</option>
-            </select>
+            />
+            <div className="row justify-content-center">
+              <p>
+                <small>* each column should be unique</small>
+              </p>
+            </div>
+
             <div className="row justify-content-center">
               <input
                 type="submit"
                 value="Submit Headers"
-                className="btn btn-info mt-2"
+                className="btn btn-info mb-4"
               />
             </div>
           </form>
