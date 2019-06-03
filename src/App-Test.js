@@ -60,7 +60,13 @@ export class App extends Component {
   };
 
   fromLocalStorage = data => {
-    console.log(data);
+    if (data !== null) {
+      console.log(data);
+      this.setState({
+        csvData: data
+      });
+    }
+    return null;
   };
 
   render() {
@@ -84,7 +90,7 @@ export class App extends Component {
           </div>
           <p className="text-center">or</p>
           <div className="row justify-content-center">
-            <p className="mr-1">Select from localStorage</p>
+            <p className="mr-1">Select previous upload from localStorage</p>
             <Button
               filenames={this.state.filenames}
               fromLocalStorage={this.fromLocalStorage}

@@ -13,6 +13,7 @@ export default class Button extends Component {
       if (localStorage.hasOwnProperty(key)) {
         return JSON.parse(localStorage.getItem(key));
       }
+      console.log("this key does not exist in localStorage");
       return null;
     };
 
@@ -20,7 +21,8 @@ export default class Button extends Component {
       selectedCsv: e.target.value
     });
 
-    console.log(getFromLocal(e.target.value));
+    // passed up to parent
+    this.props.fromLocalStorage(getFromLocal(e.target.value));
   };
 
   render() {
