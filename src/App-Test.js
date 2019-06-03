@@ -10,6 +10,8 @@ import VerifyCol from "./components/VerifyCol";
 
 export class App extends Component {
   state = {
+    currentFile: null,
+    filenames: [],
     csvRaw: [],
     headers: null,
     csvData: []
@@ -17,6 +19,7 @@ export class App extends Component {
 
   // first get headers from user input
   setHeaders = order => {
+    // array of formatted addresses
     let csvData = [];
     // then build the json for each row
     this.state.csvRaw.map(row => {
@@ -29,16 +32,23 @@ export class App extends Component {
       };
     });
 
-    this.setState({
-      headers: order,
-      csvData
-    });
+    this.setState(
+      {
+        headers: order,
+        csvData
+      },
+      // localStorage only supports strings as values
+      localStorage.setItem(this.state.currentFile, JSON.stringify(csvData))
+    );
+    console.log(JSON.parse(localStorage.getItem(this.state.currentFile)));
   };
 
-  handleForce = data => {
+  handleForce = (data, filename) => {
     console.log(data);
     this.setState({
-      csvRaw: data
+      csvRaw: data,
+      currentFile: filename,
+      filenames: [...this.state.filenames, filename]
     });
   };
 
@@ -58,7 +68,7 @@ export class App extends Component {
             <CSVReader
               cssClass="csv-reader-input"
               cssInputClass="csv-input"
-              label="Select CSV with secret Death Star statistics"
+              // label="Select CSV with secret Death Star statistics"
               onFileLoaded={this.handleForce}
               onError={this.handleDarkSideForce}
               inputId="ObiWan"
