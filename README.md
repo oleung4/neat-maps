@@ -14,16 +14,20 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 1. Contains login "protection" against anonymous users using registered Neat API users
 2. User can upload CSV file with five columns of up to 20 rows of information (no hard limit set on number of rows). Data works for US addresses
-   - Current limitation is that CSV **must be formated** in column order of `[CATEGORY, STATE, CITY, ZIPCODE, ADDRESS]`. **Ability to specify column headers not yet implemented**
+   - ~~Current limitation is that CSV **must be formated** in column order of `[CATEGORY, STATE, CITY, ZIPCODE, ADDRESS]`. **Ability to specify column headers not yet implemented**~~
+   - Switched from [react-csv-parse](https://www.npmjs.com/package/@vtex/react-csv-parse) to [react-csv-reader](https://www.npmjs.com/package/react-csv-reader). Added feature to allow user to specify CSV column headers after uploading
 3. Once the CSV file has been uploaded, a map will be rendered showing all data points (with the help of Geocoding API), colour coded by each unique Category. Users can click on each point to reveal an info window with basic information
    - Limitation of colour palette limits number of unique coloured categories to 10. Additional marker colours/shapes from different sources can be added if need be
 4. User can rerun CSV upload and render new map, as plot points are reset on each new render
-   - **Storing recent upload feature not yet implemented.** Trying to figure out how to implement without using a backend server. Maybe by storing uploaded data into separate properties, then rendering map based on selected state property
+   - ~~**Storing recent upload feature not yet implemented.** Trying to figure out how to implement without using a backend server. Maybe by storing uploaded data into separate properties, then rendering map based on selected state property~~
+   - Uploaded file's formated data persisted to **localStorage**. User can then select previous uploads from a dropdown menu
+     - Currently, selectable previous uploads are based on uploads in that session, not the localStorage values that have persisted. Code will need refactoring
+     - When a previous upload is selected, new csvData is run though the whole Map component, **which reruns Geocoding API**. Should consider storing geocoded points in localStorage instead to cutback needless API calls
 
 ### Additional Notes:
 
 - **Tests have not yet been written**
-- Tweaked code of [@vtex/react-csv-parser](https://github.com/oleung4/react-csv-parse) was not working via `yarn install github:repo`, so `CsvParse` code was imported into `./utils` folder
+- ~~Tweaked code of [@vtex/react-csv-parser](https://github.com/oleung4/react-csv-parse) was not working via `yarn install github:repo`, so `CsvParse` code was imported into `./utils` folder~~
 - With the current re-rendering logic of the Map component, I receive the following warning:
 
   > You have included the Google Maps JavaScript API multiple times on this page. This may cause unexpected errors.
