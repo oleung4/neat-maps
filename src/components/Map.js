@@ -9,7 +9,10 @@ Geocode.enableDebug(false);
 export default class Map extends Component {
   constructor(props) {
     super(props);
-    this.mapMarkers = [];
+    this.state = {
+      csvData: null,
+      categories: null
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -17,9 +20,37 @@ export default class Map extends Component {
       console.log("component is updated: ", this.props);
       this.mapMarkers = []; // reset on each render
       // timing issue - on initial render, state is empty until user uploads csv
-      this.renderMap();
+      // move renderMap() to setState callback of formatAddress
+      this.formatAddresses();
     }
   }
+
+  formatAddresses = () => {
+    const { addresses } = this.props;
+
+    let points = [];
+    let categories = [];
+
+    addresses.map(e => {
+      let point = {
+        category: e.CATEGORY,
+        address: `${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
+      };
+
+      return {
+        points: points.push(point),
+        categories: categories.push(e.CATEGORY)
+      };
+    });
+
+    this.setState(
+      {
+        csvData: points,
+        categories
+      },
+      this.renderMap()
+    );
+  };
 
   renderMap = () => {
     loadScript(
@@ -39,32 +70,35 @@ export default class Map extends Component {
     // create an infowindow
     var infoWindow = new window.google.maps.InfoWindow();
 
-    const { addresses, categories } = this.props; // destructuring for readability
+    const { csvData, categories } = this.state; // destructuring for readability
 
     // categories passed through as props, then create a new array with unique values
     var uniqueCategories = [...new Set(categories)];
-    console.log(uniqueCategories);
+    console.log("unique categories: ", uniqueCategories);
 
-    addresses.map(address => {
+    var bounds = new window.google.maps.LatLngBounds();
+    // let mapMarkers = [];
+
+    csvData.map(point => {
       // infoWindow styling
       var contentString = `
-      <h6 style="margin-bottom: 0.2em">${address.category}</h6> 
-      <p style="font-weight: 500; margin-bottom: 0.2em">${address.address}</p>
+      <h6 style="margin-bottom: 0.2em">${point.category}</h6> 
+      <p style="font-weight: 500; margin-bottom: 0.2em">${point.address}</p>
       `;
 
       // convert address to lnglat
-      Geocode.fromAddress(address.address).then(
+      return Geocode.fromAddress(point.address).then(
         response => {
-          // console.log(address.category);
+          // console.log(point.category);
           const { lat, lng } = response.results[0].geometry.location;
           var points = { lat, lng };
 
           // creating the marker for the map
           var mapMarker = new window.google.maps.Marker({
-            title: address.category,
+            title: point.category,
             position: points,
             icon: {
-              url: icons(address.category, uniqueCategories)
+              url: icons(point.category, uniqueCategories)
             },
             map
           });
@@ -77,22 +111,21 @@ export default class Map extends Component {
             infoWindow.open(map, mapMarker);
           });
 
-          this.mapMarkers.push(mapMarker);
+          // store mapMarker into an array - redundant
+          // mapMarkers.push(mapMarker);
 
           // placing fitBounds logic within Geocode function works
-          var bounds = new window.google.maps.LatLngBounds();
-          for (var i = 0; i < this.mapMarkers.length; i++) {
-            bounds.extend(this.mapMarkers[i].getPosition());
-          }
+          // for (var i = 0; i < csvData.length; i++) { // redundant - already within map
+          bounds.extend(mapMarker.getPosition());
+          // }
           map.fitBounds(bounds);
+          // console.log(mapMarker);
         },
         error => {
           console.error(error);
         }
       );
-      return this.mapMarkers;
     });
-    console.log(this.mapMarkers);
   };
 
   render() {

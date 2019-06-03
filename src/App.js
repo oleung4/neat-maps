@@ -1,17 +1,22 @@
 import React, { Component } from "react";
-import CsvParse from "./components/utils/CsvParse";
+import CSVReader from "react-csv-reader";
 
 import "./App.css";
 
 import Map from "./components/Map";
 import Login from "./components/Login";
-import Navbar from "./components/common/Navbar";
-import Footer from "./components/common/Footer";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import VerifyCol from "./components/VerifyCol";
+import Button from "./components/Button";
 
 export class App extends Component {
   state = {
-    csvData: null,
-    categories: null,
+    currentFile: null,
+    filenames: [],
+    csvRaw: [],
+    headers: null,
+    csvData: [],
     isAuthenticated: false,
     user: {}
   };
@@ -28,28 +33,55 @@ export class App extends Component {
     });
   };
 
-  handleData = data => {
-    // console.log(Array.isArray(data));
-    // processing csv directly from upload
-    let points = [];
-    let categories = [];
-
-    data.map(e => {
-      let point = {
-        category: e.CATEGORY,
-        address: `${e.ADDRESS}, ${e.CITY}, ${e.STATE}, ${e.ZIPCODE}`
-      };
-
+  // first get headers from user input
+  setHeaders = order => {
+    // array of formatted addresses
+    let csvData = [];
+    // then build the json for each row
+    this.state.csvRaw.map(row => {
+      var jsonRow = {};
+      // logic for key-value pairing for each address' columns
+      row.forEach((currentValue, index) => {
+        jsonRow[order[index]] = currentValue;
+      });
       return {
-        points: points.push(point),
-        categories: categories.push(e.CATEGORY)
+        csvData: csvData.push(jsonRow)
       };
     });
 
+    this.setState(
+      {
+        headers: order,
+        filenames: [...this.state.filenames, this.state.currentFile],
+        csvData
+      },
+      // callback function saving to localStorage - localStorage only supports strings as values
+      localStorage.setItem(this.state.currentFile, JSON.stringify(csvData))
+    );
+    // console.log(JSON.parse(localStorage.getItem(this.state.currentFile)));
+  };
+
+  handleForce = (data, filename) => {
+    console.log(data);
     this.setState({
-      csvData: points,
-      categories
+      csvRaw: data,
+      currentFile: filename
+      // filenames: [...this.state.filenames, filename]
     });
+  };
+
+  handleDarkSideForce = error => {
+    console(error);
+  };
+
+  fromLocalStorage = data => {
+    if (data !== null) {
+      console.log(data);
+      this.setState({
+        csvData: data
+      });
+    }
+    return null;
   };
 
   render() {
@@ -57,56 +89,40 @@ export class App extends Component {
       this.state.isAuthenticated &&
       Object.keys(this.state.user).length !== 0
     ) {
-      const keys = ["CATEGORY", "STATE", "CITY", "ZIPCODE", "ADDRESS"];
-
       return (
         <div id="page-container">
           <Navbar />
           <div className="container" id="content-wrap">
             <div className="row justify-content-center">
-              <h2>Select your CSV file</h2>
+              <h2>First upload a CSV file</h2>
             </div>
             <div className="row justify-content-center">
-              <CsvParse
-                keys={keys}
-                onDataUploaded={this.handleData}
-                onError={this.handleError}
-                render={onChange => (
-                  <div className="input-group mb-3">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">Upload</span>
-                    </div>
-                    <div className="custom-file">
-                      <input
-                        type="file"
-                        accept=".csv"
-                        className="custom-file-input"
-                        id="inputGroupFile01"
-                        onChange={onChange}
-                      />
-                      <label
-                        className="custom-file-label"
-                        htmlFor="inputGroupFile01"
-                      >
-                        Choose file
-                      </label>
-                    </div>
-                  </div>
-                )}
+              <CSVReader
+                cssClass="csv-reader-input"
+                cssInputClass="csv-input"
+                // label="Select CSV with secret Death Star statistics"
+                onFileLoaded={this.handleForce}
+                onError={this.handleDarkSideForce}
+                inputId="ObiWan"
+                inputStyle={{ color: "red" }}
               />
             </div>
-            {/* display map below */}
+            <p className="text-center">or</p>
             <div className="row justify-content-center">
-              <h5 style={{ marginBottom: "1.5rem" }}>
-                The map will render below
-              </h5>
+              <p className="mr-1">Select a recently uploaded CSV files</p>
+              <Button
+                filenames={this.state.filenames}
+                fromLocalStorage={this.fromLocalStorage}
+              />
             </div>
-            <Map
-              addresses={this.state.csvData}
-              categories={this.state.categories}
-            />
+            <div className="row justify-content-center">
+              <VerifyCol setHeaders={this.setHeaders} state={this.state} />
+            </div>
+            <div className="row justify-content-center" />
+            {/* display map below */}
+            <Map addresses={this.state.csvData} />
           </div>
-          <Footer />
+          <Footer />{" "}
         </div>
       );
     } else {
