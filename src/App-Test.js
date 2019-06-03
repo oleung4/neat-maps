@@ -71,9 +71,9 @@ export class App extends Component {
           <div className="row justify-content-center" />
           {/* display map below */}
           <div className="row justify-content-center">
-            <h5 style={{ marginBottom: "1.5rem" }}>
+            <p style={{ marginBottom: "1.5rem", marginTop: "1.5rem" }}>
               The map will render below
-            </h5>
+            </p>
           </div>
           <Map addresses={this.state.csvData} />
         </div>
