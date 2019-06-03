@@ -7,6 +7,7 @@ import Map from "./components/Map-test";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import VerifyCol from "./components/VerifyCol";
+import Button from "./components/Button";
 
 export class App extends Component {
   state = {
@@ -24,6 +25,7 @@ export class App extends Component {
     // then build the json for each row
     this.state.csvRaw.map(row => {
       var jsonRow = {};
+      // logic for key-value pairing for each address' columns
       row.forEach((currentValue, index) => {
         jsonRow[order[index]] = currentValue;
       });
@@ -35,25 +37,30 @@ export class App extends Component {
     this.setState(
       {
         headers: order,
+        filenames: [...this.state.filenames, this.state.currentFile],
         csvData
       },
-      // localStorage only supports strings as values
+      // callback function saving to localStorage - localStorage only supports strings as values
       localStorage.setItem(this.state.currentFile, JSON.stringify(csvData))
     );
-    console.log(JSON.parse(localStorage.getItem(this.state.currentFile)));
+    // console.log(JSON.parse(localStorage.getItem(this.state.currentFile)));
   };
 
   handleForce = (data, filename) => {
     console.log(data);
     this.setState({
       csvRaw: data,
-      currentFile: filename,
-      filenames: [...this.state.filenames, filename]
+      currentFile: filename
+      // filenames: [...this.state.filenames, filename]
     });
   };
 
   handleDarkSideForce = error => {
     console(error);
+  };
+
+  fromLocalStorage = data => {
+    console.log(data);
   };
 
   render() {
@@ -73,6 +80,14 @@ export class App extends Component {
               onError={this.handleDarkSideForce}
               inputId="ObiWan"
               inputStyle={{ color: "red" }}
+            />
+          </div>
+          <p className="text-center">or</p>
+          <div className="row justify-content-center">
+            <p className="mr-1">Select from localStorage</p>
+            <Button
+              filenames={this.state.filenames}
+              fromLocalStorage={this.fromLocalStorage}
             />
           </div>
           <div className="row justify-content-center">
